@@ -4,24 +4,32 @@ It is a web service to populate running information.
 
 The structure of running information is followed.
 ```java
-class RunningInformation {
-    enum HealthWarningLevel {
+public class RunningInformation {   
+    public enum HealthWarningLevel {
         LOW, NORMAL, HIGH;
     }
+
+    private Long id;
+    private final UserInfo userInfo;
     private String runningId;
-    private double latitude;
     private double longitude;
+    private double latitude;
     private double runningDistance;
     private double totalRunningTime;
     private int heartRate;
-    private Date timestamp;
-    private UserInfo userInfo;
     private HealthWarningLevel healthWarningLevel;
+    private Date timestamp;
 }
 public class UserInfo {
     private int userId;
     private String name;
     private String address;
+}
+
+public class UserInfo {
+    private String username;
+    private String address;
+    private UserInfo() { }
 }
 ```
 ## Deployment
@@ -57,33 +65,33 @@ All API are implemented in RESTful style. All data operation can be achieved by 
 
 ### Insert
 
-Send POST request to http://localhost:8080/running_info
-The request body example is followed.
+Send POST request to http://localhost:9000/. 
+For example, in Postman use "localhost:9000/create" to create, the request data body are as follows.
 ```json
 [
   {
-    "runningId": "7c08973d-bed4-4cbd-9c28-9282a02a6032",
-    "latitude": "38.9093216",
-    "longitude": "-77.0036435",
-    "runningDistance": "39492",
-    "totalRunningTime": "2139.25",
+    "runningId": "fb0b4725-ac25-4812-b425-d43a18c958bb",
+    "latitude": "38.5783821",
+    "longitude": "-77.3242436",
+    "runningDistance": "231",
+    "totalRunningTime": "123",
     "heartRate": 0,
-    "timestamp": "2019-04-01T18:50:35Z",
+    "timestamp": "2017-04-01T18:50:35Z",
     "userInfo": {
-      "username": "ross0",
+      "username": "ross4",
       "address": "504 CS Street, Mountain View, CA 88888"
     }
   },
   {
-    "runningId": "07e8db69-99f2-4fe2-b65a-52fbbdf8c32c",
-    "latitude": "39.927434",
-    "longitude": "-76.635816",
-    "runningDistance": "1235",
-    "totalRunningTime": "3011.23",
+    "runningId": "35be446c-9ed1-4e3c-a400-ee59bd0b6872",
+    "latitude": "42.375786",
+    "longitude": "-76.870872",
+    "runningDistance": "0",
+    "totalRunningTime": "0",
     "heartRate": 0,
-    "timestamp": "2019-04-01T18:50:35Z",
+    "timestamp": "2017-04-01T18:50:35Z",
     "userInfo": {
-      "username": "ross1",
+      "username": "ross5",
       "address": "504 CS Street, Mountain View, CA 88888"
     }
   }
@@ -92,9 +100,9 @@ The request body example is followed.
 
 ### Delete
 
-If you want to delete all data, send delete request to http://localhost:8080/running_info
+If you want to delete all data, send delete request to http://localhost:9000
 
-If you want to delete data with specified ID, send delete request to http://localhost:8080/running_info/{ID_to_delete}
+If you want to delete data with specified ID, send delete request to http://localhost:9000/{ID_to_delete}
 
 ### Modify
 
@@ -102,65 +110,94 @@ It rare so I didn't implement it. You can achieve it by deleting and adding a ne
 
 ### Query
 
-Query can be done by sending GET request to http://localhost:8080/running_info/{searching_id}?page=0&size=10
+Query can be done by sending GET request to http://localhost:9000/heartRate/{heartRate}
 
-The size parameter can be ignored and the default value is 2.
-
-Then you will get the response in JSON like below.
+This is aimed to get the data with heart rate equal to one nubmer, the test response({heartRate} is 113) are as follows.
 
 ```json
 {
-    content: [
+    "content": [
         {
-            runningId: "7c08973d-bed4-4cbd-9c28-9282a02a6032",
-            latitude: 38.9093216,
-            longitude: -77.0036435,
-            runningDistance: 39492,
-            totalRunningTime: 2139.25,
-            heartRate: 194,
-            timestamp: 1491072635000,
-            userInfo: {
-                userId: 0,
-                address: "504 CS Street, Mountain View, CA 88888",
-                name: "ross0"
+            "runningId": "35be446c-9ed1-4e3c-a400-ee59bd0b6872",
+            "latitude": 42.375786,
+            "longitude": -76.870872,
+            "runningDistance": 0,
+            "totalRunningTime": 0,
+            "heartRate": 113,
+            "timestamp": 1562119617720,
+            "userInfo": {
+                "username": "ross5",
+                "address": "504 CS Street, Mountain View, CA 88888"
             },
-            healthWarningLevel: "HIGH"
+            "id": 6,
+            "healthWarningLevel": "NORMAL",
+            "username": "ross5",
+            "address": "504 CS Street, Mountain View, CA 88888"
         }
     ],
-        last: true,
-        totalElements: 1,
-        totalPages: 1,
-        sort: [
-            {
-                direction: "DESC",
-                property: "healthWarningLevel",
-                ignoreCase: false,
-                nullHandling: "NATIVE",
-                ascending: false,
-                descending: true
-            }
-        ],
-    first: true,
-    numberOfElements: 1,
-    size: 2,
-    number: 0
+    "last": true,
+    "totalElements": 1,
+    "totalPages": 1,
+    "numberOfElements": 1,
+    "sort": null,
+    "first": true,
+    "size": 30,
+    "number": 0
 }
 ```
-Everything is the same for http://localhost/running_info, which return all data without filtering.
 
-There is also an API returning only a part of the information. The request should be sent to http://localhost:8080/running_info_simple or http://localhost:8080/running_info/[running_id] every other things are the same as the complete APIs.
+Query can be done by sending GET request to http://localhost:9000/heartRateGreaterThan/{heartRate}
 
-The simple response example is below.
+This is aimed to get the data with heart rate greater than one number, the test response({heartRate} is 70) are as follows.
 ```json
 [
     {
-        runningId: "7c08973d-bed4-4cbd-9c28-9282a02a6032",
-        totalRunningTime: 2139.25,
-        heartRate: 186,
-        userId: 0,
-        userName: "ross0",
-        userAddress: "504 CS Street, Mountain View, CA 88888",
-        healthWarningLevel: "HIGH"
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "heartRate": 83,
+        "runningId": "7c08973d-bed4-4cbd-9c28-9282a02a6032",
+        "totalRunningTime": 2139.25,
+        "userName": "ross0",
+        "userId": 1
+    },
+    {
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "heartRate": 79,
+        "runningId": "07e8db69-99f2-4fe2-b65a-52fbbdf8c32c",
+        "totalRunningTime": 3011.23,
+        "userName": "ross1",
+        "userId": 2
+    },
+    {
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "heartRate": 165,
+        "runningId": "2f3c321b-d239-43d6-8fe0-c035ecdff232",
+        "totalRunningTime": 85431.23,
+        "userName": "ross2",
+        "userId": 3
+    },
+    {
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "heartRate": 145,
+        "runningId": "fb0b4725-ac25-4812-b425-d43a18c958bb",
+        "totalRunningTime": 123,
+        "userName": "ross4",
+        "userId": 5
+    },
+    {
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "heartRate": 113,
+        "runningId": "35be446c-9ed1-4e3c-a400-ee59bd0b6872",
+        "totalRunningTime": 0,
+        "userName": "ross5",
+        "userId": 6
+    },
+    {
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "heartRate": 143,
+        "runningId": "15dfe2b9-e097-4899-bcb2-e0e8e72416ad",
+        "totalRunningTime": 0.1,
+        "userName": "ross6",
+        "userId": 7
     }
 ]
 ```
