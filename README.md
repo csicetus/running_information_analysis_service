@@ -40,34 +40,35 @@ Java(jdk 1.8), Maven, Docker
 
 ### Steps
 
-1. Choose the database. 
-1.1 If you'd like to use h2database
-1.1.1 Launch docker
+###### 1. Choose the database. 
+
+###### &emsp; h2database
+&emsp; Launch docker
 ```bash
 docker-compose up -d
 ```
-1.2 If you'd like to use MySQL 
-1.2.1 install MySQL client(Linux)
+###### &emsp; MySQL 
+&emsp; (1) Install MySQL client(Linux)
 ```bash
 sudo apt-get install mysql-client
 ```
-1.2.2 Launch MySQL docker
+&emsp; (2) Launch MySQL docker
 ```bash
 docker-compose up -d
 ```
-login from command line
+&emsp; (3)login from command line
 ```bash
 mysql --host=127.0.0.1 --port=3306 --user=root --password=root
 ```
-1.2.3 Modify the dependencies in pom.xml, remove the h2database part and uncomment the MySQL part. Set the port, username and password in src.resources.application.yml. Default => user:root, password:root.
+&emsp; (4) Modify the dependencies in pom.xml, remove the h2database part and uncomment the MySQL part. Set the port, username and password in src.resources.application.yml. Default => user:root, password:root.
 
-2. Run
+###### 2. Run
 ```bash
 mvn clean install
 ```
 by bash in the project folder to compile. If you don't have a maven, install one.
 
-3. Run
+###### 3. Run
 ```bash
 cd /../running-information-analysis-service/target
 java -jar [jar-file-compiled by Maven]
