@@ -40,6 +40,26 @@ Java(jdk 1.8), Maven, Docker
 
 ### Steps
 
+##### 0. Preparations. (Ubuntu)
+
+##### &emsp; Install Maven
+```bash
+curl https://raw.githubusercontent.com/hackjutsu/workstation-configurations/master/docker_install.sh -o docker_install.sh
+chmod a+x ./docker_install.sh
+```
+##### &emsp; Install Docker
+```bash
+# step 1: update ubuntu
+sudo apt-get update
+sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+# step 2: Install GPG certificate
+curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+# step 3: Write down software source information
+sudo add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
+# step 4: Update and install Docker-CE
+sudo apt-get -y update
+sudo apt-get -y install docker-ce
+```
 ##### 1. Choose the database. 
 
 ##### &emsp; h2database
@@ -56,7 +76,7 @@ sudo apt-get install mysql-client
 ```bash
 docker-compose up -d
 ```
-&emsp; (3)login from command line
+&emsp; (3) Login from command line
 ```bash
 mysql --host=127.0.0.1 --port=3306 --user=root --password=root
 ```
@@ -66,7 +86,7 @@ mysql --host=127.0.0.1 --port=3306 --user=root --password=root
 ```bash
 mvn clean install
 ```
-by bash in the project folder to compile. If you don't have a maven, install one.
+by bash in the project folder to compile.
 
 ##### 3. Run
 ```bash
