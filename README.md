@@ -2,7 +2,7 @@
 
 It is a web service to populate running information.
 
-The structure of running information is followed.
+The structure of running information is as follows.
 ```java
 public class RunningInformation {   
     public enum HealthWarningLevel {
@@ -36,15 +36,30 @@ public class UserInfo {
 
 ### What you need
 
-Java and Maven
+Java(jdk 1.8), Maven, Docker
 
 ### Steps
 
-1. Choose the database you want to use. For H3, everything is fine. For MySQL, install it by yourself or run 
+1. Choose the database. 
+1.1 If you'd like to use h2database
+1.1.1 Launch docker
 ```bash
 docker-compose up -d
 ```
-by bash in the project folder. Modify the dependencies in pom.xml, remove the H3 part and uncomment the MySQL part. Set the port, username and password in src.resources.application.properties. If you use to docker-compose.yml, the default one is user:root, password:password.
+1.2 If you'd like to use MySQL 
+1.2.1 install MySQL client(Linux)
+```bash
+sudo apt-get install mysql-client
+```
+1.2.2 Launch MySQL docker
+```bash
+docker-compose up -d
+```
+login from command line
+```bash
+mysql --host=127.0.0.1 --port=3306 --user=root --password=root
+```
+1.2.3 Modify the dependencies in pom.xml, remove the h2database part and uncomment the MySQL part. Set the port, username and password in src.resources.application.yml. Default => user:root, password:root.
 
 2. Run
 ```bash
